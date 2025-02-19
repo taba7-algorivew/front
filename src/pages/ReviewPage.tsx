@@ -15,9 +15,9 @@ interface ReviewPageProps {
 }
 
 const ReviewPage: React.FC<ReviewPageProps> = ({ selectedHistoryId = null }) => {
-  const [code, setCode] = useState<string>("");
+  const [sourceCode, setSourceCode] = useState<string>("");
   const [reviewResult, setReviewResult] = useState<any[]>([]);
-  const [highlightedLines, setHighlightedLines] = useState<{ start: number; end: number; colorIndex: number }[]>([]);
+  const [highlightedLines, setHighlightedLines] = useState<{ start: number; end: number; colorIndex: number }[]>([]); // ✅ 하이라이트 상태 추가
   const [inputSource, setInputSource] = useState<string | null>(null);
   const [inputData, setInputData] = useState<string | null>(null);
   const [reviewButtonLabel, setReviewButtonLabel] = useState<string>("Run Review");
@@ -46,7 +46,7 @@ const ReviewPage: React.FC<ReviewPageProps> = ({ selectedHistoryId = null }) => 
 
           setInputSource(data.input_source);
           setInputData(data.input_data);
-          setCode(data.source_code);
+          setSourceCode(data.source_code);
         })
         .catch((error) => {
           console.error("❌ Error fetching history details:", error);
@@ -63,7 +63,7 @@ const ReviewPage: React.FC<ReviewPageProps> = ({ selectedHistoryId = null }) => 
   }, [reviewResult]);
 
   const handleReview = async () => {
-    if (!inputSource || !inputData || !code.trim()) {
+    if (!inputSource || !inputData || !sourceCode.trim()) {
       alert("필수 입력값을 입력하세요!");
       return;
     }
@@ -77,7 +77,7 @@ const ReviewPage: React.FC<ReviewPageProps> = ({ selectedHistoryId = null }) => 
       input_data: inputData,
       problem_id: problemId,
       problem_info: problemInfo,
-      source_code: code,
+      source_code: sourceCode,
       reviews: [],
       user_id: userId,
     };
@@ -99,15 +99,6 @@ const ReviewPage: React.FC<ReviewPageProps> = ({ selectedHistoryId = null }) => 
         console.error("❌ API returned invalid review data:", response.reviews);
         setReviewResult([]);
       }
-
-      if (response.reviews) {
-        const highlights = response.reviews.map((review: any, index: number) => ({
-          start: review.start_line_number,
-          end: review.end_line_number,
-          colorIndex: index,
-        }));
-        setHighlightedLines(highlights);
-      }
     } catch (error) {
       console.error("❌ Error sending review request:", error);
     } finally {
@@ -116,9 +107,9 @@ const ReviewPage: React.FC<ReviewPageProps> = ({ selectedHistoryId = null }) => 
   };
 
   const newReview = () => {
-    setCode("");
+    setSourceCode("");
     setReviewResult([]);
-    setHighlightedLines([]);
+    setHighlightedLines([]); // ✅ 하이라이트 초기화
     setInputSource(null);
     setInputData(null);
     setProblemId(null);
@@ -139,7 +130,8 @@ const ReviewPage: React.FC<ReviewPageProps> = ({ selectedHistoryId = null }) => 
       <div className="code-container" style={{ display: "flex" }}>
         <Card className="code-input" style={{ flex: 1, minWidth: "400px" }}>
           <h3>Enter Your Code</h3>
-          <CodeEditor code={code} setCode={setCode} highlights={highlightedLines} />
+          {/* ✅ 하이라이트 적용 */}
+          <CodeEditor code={sourceCode} setCode={setSourceCode} highlights={highlightedLines} />
         </Card>
 
         <Card className="code-output">
@@ -150,7 +142,13 @@ const ReviewPage: React.FC<ReviewPageProps> = ({ selectedHistoryId = null }) => 
               <p>리뷰를 생성 중입니다...</p>
             </div>
           ) : (
-            <Feedback reviewResult={reviewResult} historyId={selectedHistoryId} />
+            <Feedback 
+              reviewResult={reviewResult} 
+              historyId={selectedHistoryId} 
+              problemInfo={problemInfo} 
+              sourceCode={sourceCode} 
+              setHighlightedLines={setHighlightedLines} // ✅ 하이라이트 변경 함수 전달
+            />
           )}
         </Card>
       </div>
