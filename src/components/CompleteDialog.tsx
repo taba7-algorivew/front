@@ -57,7 +57,7 @@ const CompleteReviewDialog: React.FC<CompleteReviewDialogProps> = ({ visible, on
   useEffect(() => {
     if (beforeHighlights.length > 0) {
       console.log("🎨 Before 코드 하이라이트 적용:", beforeHighlights);
-      setBeforeHighlightExtension(highlightWithOpacity(beforeHighlights, "#FFEBEE"));
+      setBeforeHighlightExtension(highlightWithOpacity(beforeHighlights, "#fa4f69"));
     }
   }, [beforeHighlights]);
 
@@ -123,7 +123,7 @@ const CompleteReviewDialog: React.FC<CompleteReviewDialogProps> = ({ visible, on
           <Card title="After" style={ cardDesign }>
             <CodeMirror
               value={sourceCode}
-              extensions={[javascript(), highlightWithOpacity(highlightedLines, "#E8F5E9")]}
+              extensions={[javascript(), highlightWithOpacity(highlightedLines, "#79fe84")]}
               readOnly
               style={codeMirrorDesign}
             />

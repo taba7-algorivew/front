@@ -16,7 +16,7 @@ html {
     height: 100%;
     background-color: #afccff43;
   }
-
+ 
   /* ✅ HEADER 스타일 */
   .custom-header {
     background: linear-gradient(120deg, #62bdfc, #2a89dc); /* 밝은 파란색 → 강한 그라데이션 */
