@@ -2,8 +2,8 @@ import { EditorView, Decoration } from "@codemirror/view";
 import { RangeSetBuilder } from "@codemirror/state";
 
 // Title에서 사용한 연두색(성공) & 빨간색(실패) 적용
-const passedColor = "#E8F5E9"; // 연두색 (is_passed: true)
-const failedColor = "#FFEBEE"; // 빨간색 (is_passed: false)
+const passedColor = "#79fe84"; // 연두색 (is_passed: true)
+const failedColor = "#fa4f69"; // 빨간색 (is_passed: false)
 
 // Highlight할 라인 정보 인터페이스
 interface HighlightedLine {
